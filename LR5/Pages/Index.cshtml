@@ -4,196 +4,71 @@
     ViewData["Title"] = "Каталог";
 }
 
-<style>
-    .catalog-header {
-        display: flex; align-items: center; justify-content: space-between;
-        margin-bottom: 2rem;
-    }
-
-    .tree-container {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        overflow: hidden;
-    }
-
-    .tree-empty {
-        padding: 4rem;
-        text-align: center;
-        color: var(--muted);
-        font-family: var(--mono);
-    }
-
-    .tree-empty span { font-size: 2rem; display: block; margin-bottom: 1rem; }
-
-    /* Tree nodes */
-    .tree-node {
-        border-bottom: 1px solid rgba(42,45,54,0.5);
-        animation: fadeIn 0.3s ease both;
-    }
-
-    .tree-node:last-child { border-bottom: none; }
-
-    @@keyframes fadeIn {
-        from { opacity: 0; transform: translateX(-8px); }
-        to   { opacity: 1; transform: translateX(0); }
-    }
-
-    .node-row {
-        display: flex; align-items: center;
-        padding: 10px 16px;
-        gap: 10px;
-        transition: background 0.15s;
-    }
-
-    .node-row:hover { background: rgba(255,255,255,0.03); }
-
-    .node-indent { flex-shrink: 0; }
-
-    .node-icon {
-        width: 22px; height: 22px;
-        border-radius: 5px;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 0.7rem;
-        flex-shrink: 0;
-    }
-
-    .icon-group { background: rgba(124,58,237,0.2); color: #a78bfa; }
-    .icon-product { background: rgba(0,229,255,0.12); color: var(--accent); }
-
-    .node-code {
-        font-family: var(--mono);
-        font-size: 0.7rem;
-        color: var(--muted);
-        min-width: 90px;
-        flex-shrink: 0;
-    }
-
-    .node-name {
-        flex: 1;
-        font-size: 0.9rem;
-        font-weight: 600;
-    }
-
-    .node-name.is-group { color: #c4b5fd; }
-    .node-name.is-product { color: var(--text); }
-
-    .node-price {
-        font-family: var(--mono);
-        font-size: 0.82rem;
-        color: var(--success);
-        min-width: 100px;
-        text-align: right;
-        flex-shrink: 0;
-    }
-
-    .node-actions {
-        display: flex; gap: 4px;
-        opacity: 0;
-        transition: opacity 0.15s;
-        flex-shrink: 0;
-    }
-
-    .node-row:hover .node-actions { opacity: 1; }
-
-    .action-btn {
-        width: 26px; height: 26px;
-        border-radius: 5px;
-        border: none; cursor: pointer;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 0.7rem;
-        text-decoration: none;
-        transition: all 0.15s;
-    }
-
-    .action-add { background: rgba(0,229,255,0.1); color: var(--accent); }
-    .action-add:hover { background: var(--accent); color: #000; }
-
-    .action-del { background: rgba(255,71,87,0.1); color: var(--danger); }
-    .action-del:hover { background: var(--danger); color: #fff; }
-
-    /* Stats bar */
-    .stats-bar {
-        display: flex; gap: 2rem;
-        margin-bottom: 2rem;
-    }
-
-    .stat {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        padding: 1rem 1.5rem;
-        display: flex; flex-direction: column; gap: 4px;
-    }
-
-    .stat-value {
-        font-family: var(--mono);
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--accent);
-    }
-
-    .stat-label {
-        font-family: var(--mono);
-        font-size: 0.7rem;
-        color: var(--muted);
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-    }
-
-    /* Connector lines */
-    .connector {
-        display: inline-block;
-        font-family: var(--mono);
-        color: var(--border);
-        font-size: 0.85rem;
-        margin-right: 4px;
-    }
-</style>
-
-<div class="catalog-header">
-    <div class="page-header" style="margin-bottom:0">
-        <h1 class="page-title">Каталог товарів</h1>
-        <span class="page-subtitle">Composite Pattern · ієрархічна структура</span>
-    </div>
-    <div style="display:flex;gap:8px">
-        <a asp-page="/Search" class="btn btn-ghost">🔍 Пошук</a>
-        <a asp-page="/Add" class="btn btn-primary">＋ Додати</a>
-    </div>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Каталог товарів</h2>
+    <a asp-page="/Add" class="btn btn-success">+ Додати елемент</a>
 </div>
 
-@if (Model.TotalGroups > 0 || Model.TotalProducts > 0)
+@if (Model.Root == null || !Model.Root.Children.Any())
 {
-    <div class="stats-bar">
-        <div class="stat">
-            <span class="stat-value">@Model.TotalGroups</span>
-            <span class="stat-label">Груп</span>
-        </div>
-        <div class="stat">
-            <span class="stat-value">@Model.TotalProducts</span>
-            <span class="stat-label">Товарів</span>
-        </div>
-        <div class="stat">
-            <span class="stat-value">@Model.MaxDepth</span>
-            <span class="stat-label">Рівнів</span>
-        </div>
+    <div class="alert alert-info">
+        Каталог порожній. <a asp-page="/Add">Додайте перший елемент</a>.
     </div>
 }
+else
+{
+    <div class="mb-3 text-muted small">
+        Груп: <strong>@Model.TotalGroups</strong> &nbsp;|&nbsp;
+        Товарів: <strong>@Model.TotalProducts</strong>
+    </div>
 
-<div class="tree-container">
-    @if (Model.Root == null || !Model.Root.Children.Any())
-    {
-        <div class="tree-empty">
-            <span>📦</span>
-            Каталог порожній.<br/>
-            <a asp-page="/Add" style="color:var(--accent)">Додати перший елемент →</a>
-        </div>
-    }
-    else
-    {
-        @foreach (var child in Model.Root.Children)
-        {
-            @await Html.PartialAsync("_TreeNode", new LR5.Pages.TreeNodeViewModel { Component = child, Depth = 0, AllItems = Model.AllItems })
-        }
-    }
-</div>
+    <table class="table table-bordered table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Абсолютний код</th>
+                <th>Відносний код</th>
+                <th>Назва</th>
+                <th>Тип</th>
+                <th>Ціна, ₴</th>
+                <th>Дії</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.AllItems.OrderBy(i => i.AbsoluteCode))
+            {
+                <tr>
+                    <td><code>@item.AbsoluteCode</code></td>
+                    <td><code>@item.RelativeCode</code></td>
+                    <td style="padding-left: @((item.AbsoluteCode.Length / 2 - 1) * 20 + 8)px">
+                        @if (!item.IsLeaf)
+                        {
+                            <strong>📁 @item.Name</strong>
+                        }
+                        else
+                        {
+                            <span>📄 @item.Name</span>
+                        }
+                    </td>
+                    <td>
+                        @if (!item.IsLeaf)
+                        {
+                            <span class="badge bg-secondary">Група</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-primary">Товар</span>
+                        }
+                    </td>
+                    <td>@(item.Price.HasValue ? item.Price.Value.ToString("N0") : "—")</td>
+                    <td>
+                        @if (!item.IsLeaf)
+                        {
+                            <a asp-page="/Add" asp-route-parentId="@item.Id" class="btn btn-sm btn-outline-success me-1">+</a>
+                        }
+                        <a asp-page="/Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Видалити</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
