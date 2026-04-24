@@ -42,10 +42,5 @@ namespace LR5.Persistence.DBServices
             _context.catalogItems.Update(item);
             await _context.SaveChangesAsync();
         }
-
-        public Task Update(int id)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

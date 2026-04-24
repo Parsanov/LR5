@@ -15,15 +15,18 @@
     <div class="col-md-6">
         <form method="post">
             <input type="hidden" asp-for="IsLeaf" id="isLeafInput" />
-            <input type="hidden" asp-for="ParentId" />
 
             <div class="mb-3">
                 <label class="form-label">Тип елемента</label>
                 <div class="d-flex gap-2">
                     <button type="button" class="btn btn-outline-secondary @(!Model.IsLeaf ? "active" : "")"
-                            id="btn-group" onclick="selectType(false)">📁 Група</button>
+                            id="btn-group" onclick="selectType(false)">
+                        📁 Група
+                    </button>
                     <button type="button" class="btn btn-outline-primary @(Model.IsLeaf ? "active" : "")"
-                            id="btn-product" onclick="selectType(true)">📄 Товар</button>
+                            id="btn-product" onclick="selectType(true)">
+                        📄 Товар
+                    </button>
                 </div>
             </div>
 
@@ -65,12 +68,12 @@
 </div>
 
 @section Scripts {
-<script>
-    function selectType(isLeaf) {
-        document.getElementById('isLeafInput').value = isLeaf;
-        document.getElementById('priceField').style.display = isLeaf ? 'block' : 'none';
-        document.getElementById('btn-group').classList.toggle('active', !isLeaf);
-        document.getElementById('btn-product').classList.toggle('active', isLeaf);
-    }
-</script>
+    <script>
+        function selectType(isLeaf) {
+            document.getElementById('isLeafInput').value = isLeaf;
+            document.getElementById('priceField').style.display = isLeaf ? 'block' : 'none';
+            document.getElementById('btn-group').classList.toggle('active', !isLeaf);
+            document.getElementById('btn-product').classList.toggle('active', isLeaf);
+        }
+    </script>
 }

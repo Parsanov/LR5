@@ -11,6 +11,6 @@
         public int? ParentId { get; set; }
 
         public CatalogItem? Parent { get; set; }
-        public List<CatalogItem> Children { get; set; }
+        public List<CatalogItem> Children { get; set; } = new();
     }
 }

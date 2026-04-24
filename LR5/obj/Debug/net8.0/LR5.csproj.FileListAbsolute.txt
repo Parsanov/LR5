@@ -105,3 +105,5 @@ C:\Users\romap\source\repos\LR5\LR5\obj\Debug\net8.0\refint\LR5.dll
 C:\Users\romap\source\repos\LR5\LR5\obj\Debug\net8.0\LR5.pdb
 C:\Users\romap\source\repos\LR5\LR5\obj\Debug\net8.0\LR5.genruntimeconfig.cache
 C:\Users\romap\source\repos\LR5\LR5\obj\Debug\net8.0\ref\LR5.dll
+C:\Users\romap\source\repos\LR5\LR5\obj\Debug\net8.0\LR5.sourcelink.json
+C:\Users\romap\source\repos\LR5\LR5\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
