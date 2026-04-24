@@ -1,0 +1,68 @@
+@using LR5.Core.Model
+@using LR5.Persistence.Data
+@model LR5.Pages.TreeNodeViewModel
+
+@{
+    bool isGroup = Model.Component is CatalogGroup;
+    bool isProduct = Model.Component is Product;
+    var product = Model.Component as Product;
+
+    // Find the CatalogItem for this component to get its Id
+    var item = Model.AllItems.FirstOrDefault(i => i.AbsoluteCode == Model.Component.AbsoluteCode);
+}
+
+<div class="tree-node">
+    <div class="node-row">
+        <div class="node-indent" style="width: @(Model.Depth * 24)px; flex-shrink:0"></div>
+
+        @if (isGroup)
+        {
+            <span class="connector">@(Model.Depth == 0 ? "┌" : "├")</span>
+            <div class="node-icon icon-group">⬡</div>
+        }
+        else
+        {
+            <span class="connector">└</span>
+            <div class="node-icon icon-product">◈</div>
+        }
+
+        <span class="node-code">@Model.Component.AbsoluteCode</span>
+        <span class="node-name @(isGroup ? "is-group" : "is-product")">@Model.Component.Name</span>
+
+        @if (isProduct && product != null)
+        {
+            <span class="node-price">@product.Price?.ToString("N0") ₴</span>
+        }
+        else
+        {
+            <span class="node-price" style="color:var(--muted);font-size:0.7rem">
+                @if (Model.Component is CatalogGroup grp) { <text>@grp.Children.Count елем.</text> }
+            </span>
+        }
+
+        <div class="node-actions">
+            @if (isGroup && item != null)
+            {
+                <a asp-page="/Add" asp-route-parentId="@item.Id" class="action-btn action-add" title="Додати в групу">＋</a>
+            }
+            @if (item != null)
+            {
+                <a asp-page="/Delete" asp-route-id="@item.Id" class="action-btn action-del" title="Видалити">✕</a>
+            }
+        </div>
+    </div>
+
+    @if (isGroup)
+    {
+        var group = (CatalogGroup)Model.Component;
+        @foreach (var child in group.Children)
+        {
+            @await Html.PartialAsync("_TreeNode", new LR5.Pages.TreeNodeViewModel
+            {
+                Component = child,
+                Depth = Model.Depth + 1,
+                AllItems = Model.AllItems
+            })
+        }
+    }
+</div>

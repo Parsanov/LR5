@@ -1,0 +1,176 @@
+@page
+@model LR5.Pages.SearchModel
+@{
+    ViewData["Title"] = "Пошук";
+}
+
+<style>
+    .search-bar {
+        display: flex; gap: 10px;
+        margin-bottom: 2rem;
+        max-width: 600px;
+    }
+
+    .search-bar input { flex: 1; }
+
+    .search-tabs {
+        display: flex; gap: 4px;
+        margin-bottom: 1.5rem;
+    }
+
+    .tab {
+        padding: 6px 16px;
+        border-radius: 8px;
+        font-family: var(--mono);
+        font-size: 0.75rem;
+        cursor: pointer;
+        border: 1px solid var(--border);
+        background: transparent;
+        color: var(--muted);
+        transition: all 0.2s;
+    }
+
+    .tab.active {
+        background: rgba(0,229,255,0.1);
+        border-color: var(--accent);
+        color: var(--accent);
+    }
+
+    .results-count {
+        font-family: var(--mono);
+        font-size: 0.75rem;
+        color: var(--muted);
+        margin-bottom: 1rem;
+    }
+
+    .result-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 1rem 1.4rem;
+        margin-bottom: 8px;
+        display: flex; align-items: center; gap: 14px;
+        transition: border-color 0.2s;
+        animation: fadeIn 0.25s ease both;
+    }
+
+    .result-card:hover { border-color: var(--accent); }
+
+    .result-icon {
+        width: 34px; height: 34px;
+        border-radius: 8px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 0.9rem;
+        flex-shrink: 0;
+    }
+
+    .result-code {
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        color: var(--muted);
+    }
+
+    .result-name {
+        font-weight: 600;
+        font-size: 0.92rem;
+        margin: 2px 0;
+    }
+
+    .result-price {
+        margin-left: auto;
+        font-family: var(--mono);
+        font-size: 0.85rem;
+        color: var(--success);
+        flex-shrink: 0;
+    }
+
+    .highlight {
+        background: rgba(0,229,255,0.2);
+        color: var(--accent);
+        border-radius: 2px;
+        padding: 0 2px;
+    }
+
+    .no-results {
+        text-align: center;
+        padding: 3rem;
+        color: var(--muted);
+        font-family: var(--mono);
+        font-size: 0.85rem;
+    }
+</style>
+
+<div class="page-header">
+    <h1 class="page-title">Пошук</h1>
+    <span class="page-subtitle">по каталогу</span>
+</div>
+
+<form method="get">
+    <div class="search-tabs">
+        <button type="submit" name="mode" value="name"
+            class="tab @(Model.Mode == "name" || Model.Mode == null ? "active" : "")">
+            за назвою
+        </button>
+        <button type="submit" name="mode" value="code"
+            class="tab @(Model.Mode == "code" ? "active" : "")">
+            за кодом
+        </button>
+    </div>
+
+    <div class="search-bar">
+        <input name="q" value="@Model.Query"
+               placeholder="@(Model.Mode == "code" ? "Введіть абсолютний код..." : "Введіть назву товару або групи...")"
+               autocomplete="off" autofocus />
+        <button type="submit" class="btn btn-primary">Знайти</button>
+    </div>
+</form>
+
+@if (Model.Query != null)
+{
+    if (Model.Results.Any())
+    {
+        <div class="results-count">Знайдено: @Model.Results.Count елементів</div>
+
+        @foreach (var item in Model.Results)
+        {
+            <div class="result-card">
+                <div class="result-icon @(!item.IsLeaf ? "icon-group" : "icon-product")">
+                    @(!item.IsLeaf ? "⬡" : "◈")
+                </div>
+                <div>
+                    <div class="result-code">@item.AbsoluteCode</div>
+                    <div class="result-name">
+                        @if (Model.Mode != "code" && !string.IsNullOrEmpty(Model.Query))
+                        {
+                            @Html.Raw(System.Text.RegularExpressions.Regex.Replace(
+                                System.Web.HttpUtility.HtmlEncode(item.Name),
+                                System.Text.RegularExpressions.Regex.Escape(System.Web.HttpUtility.HtmlEncode(Model.Query)),
+                                m => $"<span class=\"highlight\">{m.Value}</span>",
+                                System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+                        }
+                        else
+                        {
+                            @item.Name
+                        }
+                    </div>
+                    <div style="font-size:0.72rem;color:var(--muted)">
+                        @(!item.IsLeaf ? "Група" : "Товар")
+                    </div>
+                </div>
+                @if (item.Price.HasValue)
+                {
+                    <span class="result-price">@item.Price?.ToString("N0") ₴</span>
+                }
+                <div style="margin-left:@(item.Price.HasValue ? "0" : "auto");display:flex;gap:4px">
+                    <a asp-page="/Delete" asp-route-id="@item.Id" class="action-btn action-del" title="Видалити">✕</a>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="no-results">
+            Нічого не знайдено за запитом «@Model.Query»
+        </div>
+    }
+}

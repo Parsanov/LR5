@@ -1,0 +1,113 @@
+@page "{id:int}"
+@model LR5.Pages.DeleteModel
+@{
+    ViewData["Title"] = "Видалити";
+}
+
+<style>
+    .delete-card {
+        max-width: 520px;
+        background: var(--surface);
+        border: 1px solid rgba(255,71,87,0.25);
+        border-radius: 14px;
+        padding: 2.5rem;
+    }
+
+    .danger-icon {
+        width: 56px; height: 56px;
+        background: rgba(255,71,87,0.1);
+        border: 2px solid rgba(255,71,87,0.3);
+        border-radius: 14px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .item-preview {
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 1rem 1.2rem;
+        margin: 1.5rem 0;
+        display: flex; align-items: center; gap: 12px;
+    }
+
+    .item-code {
+        font-family: var(--mono);
+        font-size: 0.75rem;
+        color: var(--muted);
+    }
+
+    .item-name {
+        font-weight: 600;
+        font-size: 0.95rem;
+    }
+
+    .warning-box {
+        background: rgba(255,165,0,0.08);
+        border: 1px solid rgba(255,165,0,0.25);
+        border-radius: 8px;
+        padding: 10px 14px;
+        font-family: var(--mono);
+        font-size: 0.75rem;
+        color: #fbbf24;
+        margin-bottom: 1.5rem;
+    }
+
+    .action-row { display: flex; gap: 10px; margin-top: 1.5rem; }
+</style>
+
+<div class="page-header">
+    <h1 class="page-title">Видалення</h1>
+</div>
+
+@if (Model.Item == null)
+{
+    <div class="alert alert-danger">Елемент не знайдено.</div>
+    <a asp-page="/Index" class="btn btn-ghost">← Назад</a>
+}
+else
+{
+    <div class="delete-card">
+        <div class="danger-icon">⚠</div>
+
+        <h2 style="font-size:1.1rem;margin-bottom:0.5rem">Ви впевнені?</h2>
+        <p style="color:var(--muted);font-size:0.85rem">
+            Ця дія незворотня. Елемент буде видалено з каталогу.
+        </p>
+
+        <div class="item-preview">
+            @if (!Model.Item.IsLeaf)
+            {
+                <div style="color:#a78bfa;font-size:1.1rem">⬡</div>
+            }
+            else
+            {
+                <div style="color:var(--accent);font-size:1.1rem">◈</div>
+            }
+            <div>
+                <div class="item-code">@Model.Item.AbsoluteCode</div>
+                <div class="item-name">@Model.Item.Name</div>
+                @if (Model.Item.Price.HasValue)
+                {
+                    <div style="font-family:var(--mono);font-size:0.8rem;color:var(--success)">@Model.Item.Price?.ToString("N0") ₴</div>
+                }
+            </div>
+        </div>
+
+        @if (!Model.Item.IsLeaf && Model.ChildrenCount > 0)
+        {
+            <div class="warning-box">
+                ⚠ Ця група містить @Model.ChildrenCount елементів — вони також будуть видалені
+            </div>
+        }
+
+        <div class="action-row">
+            <form method="post">
+                <input type="hidden" name="id" value="@Model.Item.Id" />
+                <button type="submit" class="btn btn-danger">Так, видалити</button>
+            </form>
+            <a asp-page="/Index" class="btn btn-ghost">Скасувати</a>
+        </div>
+    </div>
+}

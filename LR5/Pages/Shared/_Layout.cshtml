@@ -1,52 +1,241 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="uk">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - LR5</title>
-    <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/LR5.styles.css" asp-append-version="true" />
+    <title>@ViewData["Title"] — TechCatalog</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0c10;
+            --surface: #111318;
+            --surface2: #1a1d24;
+            --border: #2a2d36;
+            --accent: #00e5ff;
+            --accent2: #7c3aed;
+            --danger: #ff4757;
+            --success: #00c896;
+            --text: #e2e8f0;
+            --muted: #6b7280;
+            --mono: 'Space Mono', monospace;
+            --sans: 'Syne', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            min-height: 100vh;
+            background-image:
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0,229,255,0.06) 0%, transparent 60%),
+                linear-gradient(180deg, #0a0c10 0%, #0d0f14 100%);
+        }
+
+        /* NAV */
+        nav {
+            background: rgba(17,19,24,0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; z-index: 100;
+            padding: 0 2rem;
+            display: flex; align-items: center; justify-content: space-between;
+            height: 60px;
+        }
+
+        .nav-brand {
+            font-family: var(--mono);
+            font-size: 1rem;
+            color: var(--accent);
+            text-decoration: none;
+            letter-spacing: 0.1em;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        .nav-brand::before {
+            content: '◈';
+            font-size: 1.2rem;
+        }
+
+        .nav-links { display: flex; gap: 4px; }
+
+        .nav-links a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-family: var(--mono);
+            padding: 6px 14px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            letter-spacing: 0.05em;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+            background: rgba(0,229,255,0.08);
+        }
+
+        /* MAIN */
+        main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2.5rem 2rem;
+        }
+
+        /* PAGE TITLE */
+        .page-header {
+            margin-bottom: 2rem;
+            display: flex; align-items: baseline; gap: 1rem;
+        }
+
+        .page-title {
+            font-family: var(--sans);
+            font-weight: 800;
+            font-size: 1.8rem;
+            color: var(--text);
+        }
+
+        .page-subtitle {
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        /* CARDS */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        /* BUTTONS */
+        .btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 8px 18px;
+            border-radius: 8px;
+            border: none; cursor: pointer;
+            font-family: var(--mono);
+            font-size: 0.78rem;
+            letter-spacing: 0.05em;
+            text-decoration: none;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #000;
+            font-weight: 700;
+        }
+        .btn-primary:hover { background: #33ecff; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(0,229,255,0.3); }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--muted);
+            border: 1px solid var(--border);
+        }
+        .btn-ghost:hover { color: var(--text); border-color: var(--text); }
+
+        .btn-danger {
+            background: rgba(255,71,87,0.1);
+            color: var(--danger);
+            border: 1px solid rgba(255,71,87,0.3);
+        }
+        .btn-danger:hover { background: var(--danger); color: #fff; }
+
+        /* FORM */
+        .form-group { margin-bottom: 1.2rem; }
+
+        label {
+            display: block;
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            color: var(--muted);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        input, select {
+            width: 100%;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: var(--mono);
+            font-size: 0.9rem;
+            padding: 10px 14px;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0,229,255,0.1);
+        }
+
+        input[type="checkbox"] {
+            width: auto;
+            accent-color: var(--accent);
+        }
+
+        /* ALERTS */
+        .alert {
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .alert-danger { background: rgba(255,71,87,0.1); border: 1px solid rgba(255,71,87,0.3); color: var(--danger); }
+        .alert-success { background: rgba(0,200,150,0.1); border: 1px solid rgba(0,200,150,0.3); color: var(--success); }
+
+        /* TAG / BADGE */
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            letter-spacing: 0.06em;
+        }
+
+        .badge-group { background: rgba(124,58,237,0.15); color: #a78bfa; border: 1px solid rgba(124,58,237,0.3); }
+        .badge-product { background: rgba(0,229,255,0.1); color: var(--accent); border: 1px solid rgba(0,229,255,0.25); }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 0.7rem;
+            border-top: 1px solid var(--border);
+            margin-top: 4rem;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">LR5</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - LR5 - <a asp-area="" asp-page="/Privacy">Privacy</a>
+    <nav>
+        <a class="nav-brand" asp-page="/Index">TECHCATALOG</a>
+        <div class="nav-links">
+            <a asp-page="/Index">Каталог</a>
+            <a asp-page="/Add">Додати</a>
+            <a asp-page="/Search">Пошук</a>
         </div>
-    </footer>
+    </nav>
+
+    <main>
+        @RenderBody()
+    </main>
+
+    <footer>◈ TechCatalog — Лабораторна робота №5 · Composite Pattern</footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
