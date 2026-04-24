@@ -1,0 +1,14 @@
+C:\Users\romap\source\repos\LR5\CompositeTest\bin\Debug\net10.0\CompositeTest.exe
+C:\Users\romap\source\repos\LR5\CompositeTest\bin\Debug\net10.0\CompositeTest.deps.json
+C:\Users\romap\source\repos\LR5\CompositeTest\bin\Debug\net10.0\CompositeTest.runtimeconfig.json
+C:\Users\romap\source\repos\LR5\CompositeTest\bin\Debug\net10.0\CompositeTest.dll
+C:\Users\romap\source\repos\LR5\CompositeTest\bin\Debug\net10.0\CompositeTest.pdb
+C:\Users\romap\source\repos\LR5\CompositeTest\obj\Debug\net10.0\CompositeTest.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\romap\source\repos\LR5\CompositeTest\obj\Debug\net10.0\CompositeTest.AssemblyInfoInputs.cache
+C:\Users\romap\source\repos\LR5\CompositeTest\obj\Debug\net10.0\CompositeTest.AssemblyInfo.cs
+C:\Users\romap\source\repos\LR5\CompositeTest\obj\Debug\net10.0\CompositeTest.csproj.CoreCompileInputs.cache
+C:\Users\romap\source\repos\LR5\CompositeTest\obj\Debug\net10.0\CompositeTest.dll
+C:\Users\romap\source\repos\LR5\CompositeTest\obj\Debug\net10.0\refint\CompositeTest.dll
+C:\Users\romap\source\repos\LR5\CompositeTest\obj\Debug\net10.0\CompositeTest.pdb
+C:\Users\romap\source\repos\LR5\CompositeTest\obj\Debug\net10.0\CompositeTest.genruntimeconfig.cache
+C:\Users\romap\source\repos\LR5\CompositeTest\obj\Debug\net10.0\ref\CompositeTest.dll
